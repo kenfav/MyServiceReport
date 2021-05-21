@@ -1,0 +1,89 @@
+<MyServiceReportApp>:
+    MainScreen:
+
+<MainScreen>:
+    BoxLayout:
+        orientation: 'vertical'
+        Label:
+            text: "Insert your activity:"
+            size_hint_y:None
+            height:'20dp'
+            size_hint_x:1
+
+        GridLayout:
+            padding: 5
+            size_hint_y:1.70
+            cols:2
+            rows:5
+            Label:
+                text: 'Date:'
+                text_size: self.size
+                font_size:'20dp'
+                halign: 'left'
+                size_hint_y:None
+                height:'60dp'
+            TextInput:
+                id:report1
+                hint_text:'Enter date (DD-MM-YYYY):'
+                multiline: False
+                size_hint_y:None
+                height:'60dp'
+            Label:
+                text: 'Publications:'
+                text_size: self.size
+                font_size:'20dp'
+                halign: 'left'
+                size_hint_y:None
+                height:'60dp'
+            TextInput:
+                id:report2
+                hint_text:''
+                multiline: False
+                size_hint_y:None
+                height:'60dp'
+            Label:
+                text: 'Videos:'
+                text_size: self.size
+                font_size:'20dp'
+                halign: 'left'
+                size_hint_y:None
+                height:'60dp'
+            TextInput:
+                id:report3
+                hint_text:''
+                multiline: False
+                size_hint_y:None
+                height:'60dp'
+            Label:
+                text: 'Time:'
+                text_size: self.size
+                font_size:'20dp'
+                halign: 'left'
+                size_hint_y:None
+                height:'60dp'
+            TextInput:
+                id:report4
+                hint_text:''
+                multiline: False
+                size_hint_y:None
+                height:'60dp'
+            Label:
+                text: 'Return visits:'
+                text_size: self.size
+                font_size:'20dp'
+                halign: 'left'
+                size_hint_y:None
+                height:'60dp'
+            TextInput:
+                id:report5
+                hint_text:''
+                multiline: False
+                size_hint_y:None
+                height:'60dp'
+   
+        BoxLayout:
+            orientation:'vertical'
+            Button:
+                text:'Add Activity'
+                on_release:root.do_registry_activity(report1.text,report2.text,report3.text,report4.text,report5.text)
+            Widget:
