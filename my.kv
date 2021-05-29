@@ -1,3 +1,4 @@
+#: import Factory kivy.factory.Factory
 <MyServiceReportApp>:
     MainScreen:
 
@@ -24,7 +25,7 @@
                 height:'60dp'
             TextInput:
                 id:report1
-                hint_text:'Enter date (DD-MM-YYYY):'
+                hint_text:'Enter date (DD-MM-YY):'
                 multiline: False
                 size_hint_y:None
                 height:'60dp'
@@ -41,6 +42,7 @@
                 multiline: False
                 size_hint_y:None
                 height:'60dp'
+                input_filter:'int'
             Label:
                 text: 'Videos:'
                 text_size: self.size
@@ -54,6 +56,7 @@
                 multiline: False
                 size_hint_y:None
                 height:'60dp'
+                input_filter:'int'
             Label:
                 text: 'Time:'
                 text_size: self.size
@@ -67,6 +70,7 @@
                 multiline: False
                 size_hint_y:None
                 height:'60dp'
+                hint_text:'Enter time (HH:MM):'
             Label:
                 text: 'Return visits:'
                 text_size: self.size
@@ -80,10 +84,29 @@
                 multiline: False
                 size_hint_y:None
                 height:'60dp'
-   
+                input_filter:'int'
         BoxLayout:
             orientation:'vertical'
+            padding: 5
             Button:
+                size_hint: .2, .2
                 text:'Add Activity'
                 on_release:root.do_registry_activity(report1.text,report2.text,report3.text,report4.text,report5.text)
-            Widget:
+            Button:
+                text: 'Activity Summary'
+                on_release: root.activity_summary()
+
+<ErrorPopUp>
+    auto_dismiss: False
+    size_hint: 0.6, 0.4
+    pos_hint: {"x":0.2, "top": 0.9}
+    title: 'Error'
+    BoxLayout:
+        orientation: 'vertical'
+        size: root.width, root.height
+        Label:
+            text:'Insert data in the correct format!'
+            font_size: 24
+        Button:
+            text: 'Close'
+            on_release: root.dismiss()
