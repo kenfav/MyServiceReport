@@ -92,9 +92,22 @@
                 size_hint: .2, .2
                 text:'Add Activity'
                 on_release:root.do_registry_activity(report1.text,report2.text,report3.text,report4.text,report5.text)
-            Button:
-                text: 'Activity Summary'
-                on_release: root.activity_summary()
+            BoxLayout:
+                orientation:'vertical'
+                Label:
+                    text: 'Activity Summary'
+                   # on_release: root.activity_summary()
+                Label:
+                    text:'Videos'
+                Label:
+                    text:'Publications'
+                Label:
+                    text:'Time'
+                Label:
+                    text:'Return visits'
+                Label:
+                    text:'Bible Study'
+
 
 <ErrorPopUp>
     auto_dismiss: False
