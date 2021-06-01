@@ -1,21 +1,34 @@
 from kivy.app import App
-from kivy.lang import Builder
-from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.popup import Popup
 from kivy.factory import Factory
 from kivy.config import Config
 import MyService
+from kivy.properties import StringProperty
 
-Config.set('graphics','width', '450')
-Config.set('graphics','heigth', '800')
+
+Config.set('graphics', 'width', '450')
+Config.set('graphics', 'heigth', '800')
+
+
 class MyServiceReportApp(ScreenManager):
     pass
+
 
 class ErrorPopUp(Popup):
     pass
 
+
 class MainScreen(Screen):
+    def __init__(self, **kw):
+        super().__init__(**kw)
+        self.activity_summary(My.db.soma_mes())
+    videos = StringProperty('Videos Shown')
+    publicacoes = StringProperty('Publications')
+    horas = StringProperty('Hours')
+    revisitas = StringProperty('Return Visits')
+    estudos = StringProperty('Bible Studies')
+
     def do_registry_activity(self, *args):
         lista = []
         for arg in args:
@@ -23,9 +36,9 @@ class MainScreen(Screen):
         try:
             print(lista)
             My.db.add_to_database(lista)
+            self.activity_summary()
             self.clear_fields()
-        except (ValueError,NameError):
-            print('to aqui')
+        except (ValueError, NameError):
             self.clear_fields()
             Factory.ErrorPopUp().open()
 
@@ -36,8 +49,17 @@ class MainScreen(Screen):
         self.ids.report4.text = ''
         self.ids.report5.text = ''
 
-    def activity_summary(self):
-        print(My.db.soma_mes())
+    def activity_summary(self, valor=None):
+        if valor == None:
+            valor = My.db.soma_mes()
+        print(f" o valor atual e:{valor}")
+        soma_publicacoes, soma_videos, total_horas, soma_revisitas, soma_estudos = valor
+        self.videos = f"Videos Shown: {soma_videos}"
+        self.publicacoes = f"Publications: {soma_publicacoes}"
+        self.horas = f"Hours: {total_horas}"
+        self.revisitas = f"Return Visits: {soma_revisitas}"
+        self.estudos = f"Bible Studies: {soma_estudos}"
+
 
 class MainMenu(Screen):
     pass
@@ -45,9 +67,9 @@ class MainMenu(Screen):
 
 class My(App):
     db = MyService.MainApp('MyServiceReport.db')
+
     def build(self):
         return MyServiceReportApp()
-
 
 
 My().run()

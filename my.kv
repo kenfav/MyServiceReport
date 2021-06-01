@@ -12,8 +12,8 @@
             size_hint_x:1
 
         GridLayout:
-            padding: 5
-            size_hint_y:1.70
+            padding: 10
+            size_hint_y:1.2
             cols:2
             rows:5
             Label:
@@ -23,6 +23,7 @@
                 halign: 'left'
                 size_hint_y:None
                 height:'60dp'
+                padding_x: 10
             TextInput:
                 id:report1
                 hint_text:'Enter date (DD-MM-YY):'
@@ -36,6 +37,7 @@
                 halign: 'left'
                 size_hint_y:None
                 height:'60dp'
+                padding_x: 10
             TextInput:
                 id:report2
                 hint_text:''
@@ -50,6 +52,7 @@
                 halign: 'left'
                 size_hint_y:None
                 height:'60dp'
+                padding_x: 10
             TextInput:
                 id:report3
                 hint_text:''
@@ -64,6 +67,7 @@
                 halign: 'left'
                 size_hint_y:None
                 height:'60dp'
+                padding_x: 10
             TextInput:
                 id:report4
                 hint_text:''
@@ -78,6 +82,7 @@
                 halign: 'left'
                 size_hint_y:None
                 height:'60dp'
+                padding_x: 10
             TextInput:
                 id:report5
                 hint_text:''
@@ -87,26 +92,59 @@
                 input_filter:'int'
         BoxLayout:
             orientation:'vertical'
-            padding: 5
+            padding: 10
             Button:
-                size_hint: .2, .2
+                size_hint: .3, .3
                 text:'Add Activity'
                 on_release:root.do_registry_activity(report1.text,report2.text,report3.text,report4.text,report5.text)
+                pos_hint: {'center_x': .5, 'y': 'middle'}
             BoxLayout:
                 orientation:'vertical'
                 Label:
-                    text: 'Activity Summary'
+                    text: 'This Month Activity Summary'
+                    text_size: self.size
+                    valign: 'middle'
+                    halign: 'center'
+                    #padding_x: 10
+                    font_size:'20dp'
+                    bold: True
                    # on_release: root.activity_summary()
                 Label:
-                    text:'Videos'
+                    id: publicacoes
+                    text:root.publicacoes
+                    text_size: self.size
+                    valign: 'middle'
+                    padding_x: 10
+                    font_size:'16dp'
                 Label:
-                    text:'Publications'
+                    id: videos
+                    text:root.videos
+                    text_size: self.size
+                    valign: 'middle'
+                    padding_x: 10
+                    font_size:'16dp'
+
                 Label:
-                    text:'Time'
+                    id: horas
+                    text:root.horas
+                    text_size: self.size
+                    valign: 'middle'
+                    padding_x: 10
+                    font_size:'16dp'
                 Label:
-                    text:'Return visits'
+                    id: revisitas
+                    text:root.revisitas
+                    text_size: self.size
+                    valign: 'middle'
+                    padding_x: 10
+                    font_size:'16dp'
                 Label:
-                    text:'Bible Study'
+                    id: estudos
+                    text:root.estudos
+                    text_size: self.size
+                    valign: 'middle'
+                    padding_x: 10
+                    font_size:'16dp'
 
 
 <ErrorPopUp>

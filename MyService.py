@@ -5,18 +5,15 @@ import sqlite3
 
 class MainApp:
     def __init__(self, banco_de_dados):
+        self.banco_de_dados = banco_de_dados
         self.report = {}
         self.year = datetime.now().year
-        self.con = sqlite3.connect(banco_de_dados)
-        self.cursor = self.con.cursor()
-        self.cursor.execute('''
-                            SELECT count(name) FROM sqlite_master WHERE type='table' AND name='reports'
-                            ''')
-        if self.cursor.fetchone()[0] == 1:
-            pass
-        else:
+        try:
+            self.con = sqlite3.connect(banco_de_dados)
+            self.cursor = self.con.cursor()
             self.cursor.execute('''
-                                CREATE TABLE "reports" (
+                                CREATE TABLE IF NOT EXISTS "reports" (
+                                        "Id"	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
                                         "data"	DATE NOT NULL,
                                         "publicacoes"	SHORT,
                                         "videos"	SHORT,
@@ -24,6 +21,13 @@ class MainApp:
                                         "revisitas"	SHORT,
                                         "estudos"	SHORT
                                 );''')
+            self.con.commit()
+        except sqlite3.Error:
+            print('Error creating DataBase.')
+        finally:
+            if self.con:
+                self.cursor.close()
+                self.con.close()
 
     def last_day_of_month(self, date):
         _, lastday = calendar.monthrange(date.year, date.month)
@@ -69,49 +73,96 @@ class MainApp:
                 raise NameError
         return (data, publicacoes, videos, horas, revisitas)
 
-    def add_to_database(self,values=None):
+    def add_to_database(self, values=None):
         if values:
             values = self.convert_values_to_database(values)
-            self.cursor.execute("""
-                                INSERT OR IGNORE INTO reports (data,
-                                publicacoes, videos, horas,
-                                revisitas, estudos)
-                                VALUES (?,?,?,?,?,0)""",(values))
+            try:
+                self.con = sqlite3.connect(self.banco_de_dados)
+                self.cursor = self.con.cursor()
+                self.cursor.execute("""
+                                    INSERT OR IGNORE INTO reports (data,
+                                    publicacoes, videos, horas,
+                                    revisitas, estudos)
+                                    VALUES (?,?,?,?,?,0)""", (values))
+                self.con.commit()
+            except sqlite3.Error as error:
+                print('Problem when connecting to dadabase.', error)
+            finally:
+                if self.con:
+                    self.cursor.close()
+                    self.con.close()
+
+    def remove_from_database(self, id=None):
+        if not id:
+            raise ValueError('Please insert an Id')
         else:
-            self.cursor.execute("""
-                                INSERT OR IGNORE INTO reports
-                                (data, publicacoes, videos,
-                                horas, revisitas, estudos)
-                                VALUES (:data, :publicacoes,
-                                :videos, :horas, :revisitas,
-                                :estudos)""")
-        self.con.commit()
+            try:
+                self.con = sqlite3.connect(self.banco_de_dados)
+                self.cursor = self.con.cursor()
+                print("Connected to SQLite")
+                self.cursor.execute("""
+                                    DELETE from reports where id = ?""", (id,))
+                self.con.commit()
+            except sqlite3.Error as error:
+                print("Failed to delete multiple records from sqlite table", error)
+            finally:
+                if self.con:
+                    self.cursor.close()
+                    self.con.close()
 
     def dispose(self):
         self.cursor.close()
         self.con.close()
 
-    def soma_mes(self):
-        today = datetime.today()
-        mes = today.month
-        first_day = datetime(self.year, mes, 1)
-        last_day = self.last_day_of_month(first_day)
+    def pegar_atividade_mensal(self, mes=None):
+        try:
+            self.con = sqlite3.connect(self.banco_de_dados)
+            self.cursor = self.con.cursor()
 
-        self.cursor.execute("SELECT * FROM reports WHERE data BETWEEN ? AND ?", (first_day, last_day))
-        my_activity = self.cursor.fetchall()
+            if mes == None:
+                today = datetime.today()
+                mes = today.month
+                first_day = datetime(self.year, mes, 1)
+                last_day = self.last_day_of_month(first_day)
+                self.cursor.execute(
+                    "SELECT * FROM reports WHERE data BETWEEN ? AND ?", (first_day, last_day))
+                my_activity = self.cursor.fetchall()
+                return my_activity
+            else:
+                first_day = datetime.fromisoformat(
+                    str(self.year)+'-'+mes+'-01')
+                last_day = self.last_day_of_month(first_day)
+                self.cursor.execute(
+                    "SELECT * FROM reports WHERE data BETWEEN ? AND ?", (first_day, last_day))
+                my_activity = self.cursor.fetchall()
+                return my_activity
+        except sqlite3.Error as error:
+            print('Problem when connecting to the database', error)
+        finally:
+            if self.con:
+                self.cursor.close()
+                self.con.close()
+
+    def soma_mes(self, mes=None):
+        my_activity = self.pegar_atividade_mensal(mes)
         print(my_activity)
         soma_videos = 0
         soma_publicacoes = 0
         soma_horas = 0
         soma_revisitas = 0
         soma_estudos = 0
-        for _, videos, publicacoes, horas, revisitas, estudos in my_activity:
-                soma_videos += videos
-                soma_publicacoes += publicacoes
-                soma_horas += horas
-                soma_revisitas += revisitas
-                soma_estudos += estudos
-                total_horas = str(soma_horas//60)+':'+ str(soma_horas%60)
+        if not my_activity:
+            print('There is no activity for this month!')
+            return (0, 0, '00:00', 0, 0)
+        for _, __, videos, publicacoes, horas, revisitas, estudos in my_activity:
+            soma_videos += videos
+            soma_publicacoes += publicacoes
+            soma_horas += horas
+            soma_revisitas += revisitas
+            soma_estudos += estudos
+            if soma_horas % 60 == 0:
+                total_horas = str(soma_horas//60)+':' + \
+                    str(soma_horas % 60) + '0'
+            else:
+                total_horas = str(soma_horas//60)+':' + str(soma_horas % 60)
         return (soma_videos, soma_publicacoes, total_horas, soma_revisitas, soma_estudos)
-
-
