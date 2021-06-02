@@ -5,6 +5,8 @@ from kivy.factory import Factory
 from kivy.config import Config
 import MyService
 from kivy.properties import StringProperty
+from kivy.uix.label import Label
+from kivy.uix.scrollview import ScrollView
 
 
 Config.set('graphics', 'width', '450')
@@ -12,11 +14,12 @@ Config.set('graphics', 'heigth', '800')
 
 
 class MyServiceReportApp(ScreenManager):
-    pass
-
-
-class ErrorPopUp(Popup):
-    pass
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.lista_actividades = My.db.ordenar_lista_atividade()
+        for n in self.lista_actividades:
+            self.get_screen(name='list_activity').ids.listbox.add_widget(
+                Label(text=f'Date: {n[1][:10]}\nPublications: {n[2]}\nVideos: {n[3]}\nTime: {n[4]}\nReturn Visits: {n[5]}', size_hint_y=None, height=150, font_size=22, halign='left'))
 
 
 class MainScreen(Screen):
@@ -62,6 +65,18 @@ class MainScreen(Screen):
 
 
 class MainMenu(Screen):
+    pass
+
+
+class ListActivity(Screen):
+    pass
+
+
+class TelaListActivity(ScrollView):
+    pass
+
+
+class ErrorPopUp(Popup):
     pass
 
 

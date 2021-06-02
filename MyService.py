@@ -166,3 +166,15 @@ class MainApp:
             else:
                 total_horas = str(soma_horas//60)+':' + str(soma_horas % 60)
         return (soma_videos, soma_publicacoes, total_horas, soma_revisitas, soma_estudos)
+
+    def ordenar_lista_criterio(self, lista):
+        return lista[1]
+
+    def ordenar_lista_atividade(self, lista=None):
+        if not lista:
+            lista = self.pegar_atividade_mensal()
+            lista.sort(key=self.ordenar_lista_criterio)
+            return lista
+        else:
+            lista.sort(key=self.ordenar_lista_criterio)
+            return lista

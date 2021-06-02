@@ -1,8 +1,25 @@
 #: import Factory kivy.factory.Factory
 <MyServiceReportApp>:
+    ListActivity:
     MainScreen:
-
+    #ListActivity:
+    
+    
+<ListActivity>:
+    name: 'list_activity'
+    TelaListActivity:
+        BoxLayout:
+            id:listbox
+            orientation: 'vertical'
+            size_hint_y: None
+            height:self.minimum_height 
+            Label:
+                text: "Resume of your activity:"
+                font_size: '25dp'
+                size_hint_y:None
+                height: '30dp'
 <MainScreen>:
+    name: 'main'
     BoxLayout:
         orientation: 'vertical'
         Label:
