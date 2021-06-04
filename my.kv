@@ -1,10 +1,22 @@
 #: import Factory kivy.factory.Factory
 <MyServiceReportApp>:
-    ListActivity:
+    MainMenu:
+        name: 'mainmenu'
+        GridLayout:
+            cols:1
+            rows:3
+            Button:
+                text:'Insert Activity'
+                on_release: root.current = 'main'
+
+            Button:
+                text: 'List Activity'
+                on_release: root.current = 'list_activity'
     MainScreen:
-    #ListActivity:
-    
-    
+    ListActivity:
+        on_pre_enter: root.listar_atividades()
+
+
 <ListActivity>:
     name: 'list_activity'
     TelaListActivity:
@@ -12,21 +24,34 @@
             id:listbox
             orientation: 'vertical'
             size_hint_y: None
-            height:self.minimum_height 
-            Label:
-                text: "Resume of your activity:"
-                font_size: '25dp'
-                size_hint_y:None
-                height: '30dp'
+            height:self.minimum_height
+            ActionBar:
+                ActionView:
+                    ActionPrevious:
+                        title: 'Resume of your activity:'
+                        on_release:app.root.current = 'mainmenu'
+<AtividadesDoMes>:
+    size_hint_y: None
+    height: 150
+    Label:
+        id: mylabel
+        font_size: 22
+        halign: 'left'
+    Button:
+        text: 'X'
+        size_hint_x: None
+        width: 60
+        on_release: app.root.delete_widget(root)
+
 <MainScreen>:
     name: 'main'
     BoxLayout:
         orientation: 'vertical'
-        Label:
-            text: "Insert your activity:"
-            size_hint_y:None
-            height:'20dp'
-            size_hint_x:1
+        ActionBar:
+            ActionView:
+                ActionPrevious:
+                    title: 'Insert your activity:'
+                    on_release:app.root.current = 'mainmenu'
 
         GridLayout:
             padding: 10
@@ -166,7 +191,7 @@
 
 <ErrorPopUp>
     auto_dismiss: False
-    size_hint: 0.6, 0.4
+    size_hint: 0.6, 0.25
     pos_hint: {"x":0.2, "top": 0.9}
     title: 'Error'
     BoxLayout:
@@ -174,7 +199,10 @@
         size: root.width, root.height
         Label:
             text:'Insert data in the correct format!'
-            font_size: 24
+            font_size: 16
         Button:
             text: 'Close'
             on_release: root.dismiss()
+            size_hint: None, None
+            size: 100,30
+            pos_hint: {'center_x': .5, 'y': .5}
