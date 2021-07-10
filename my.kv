@@ -19,17 +19,20 @@
 
 <ListActivity>:
     name: 'list_activity'
-    TelaListActivity:
-        BoxLayout:
-            id:listbox
-            orientation: 'vertical'
-            size_hint_y: None
-            height:self.minimum_height
-            ActionBar:
-                ActionView:
-                    ActionPrevious:
-                        title: 'Resume of your activity:'
-                        on_release:app.root.current = 'mainmenu'
+    BoxLayout:
+        orientation: 'vertical'
+        ActionBar:
+            ActionView:
+                ActionPrevious:
+                    title: 'Resume of your activity:'
+                    on_release:app.root.current = 'mainmenu'
+        TelaListActivity:
+            BoxLayout:
+                id:listbox
+                orientation: 'vertical'
+                size_hint_y: None
+                height:self.minimum_height
+                
 <AtividadesDoMes>:
     size_hint_y: None
     height: 150
