@@ -18,8 +18,12 @@ class MyServiceReportApp(ScreenManager):
 
     def listar_atividades(self):
         self.lista_actividades = My.db.ordenar_lista_atividade()
+        
+        listbox = self.get_screen(name='list_activity').ids.listbox
+        listbox.clear_widgets()
+        
         for n in self.lista_actividades:
-            self.get_screen(name='list_activity').ids.listbox.add_widget(AtividadesDoMes(
+            listbox.add_widget(AtividadesDoMes(
                 text=f'Date: {n[1][:10]}\nPublications: {n[2]}\nVideos: {n[3]}\nTime: {n[4]}\nReturn Visits: {n[5]}', myid=n[0]))
 
     def delete_widget(self, the_widget):
